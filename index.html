@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Editor - nattomaki10000</title>
+    <title>nattomaki10000 - Blog Editor</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" defer></script>
     <script src="https://esm.sh/css-doodle/css-doodle.min.js?raw"></script>
@@ -20,8 +20,8 @@
 
         .background { position: fixed; inset: 0; z-index: -2; }
 
-        /* ツールバーを最上部に固定 */
-        .toolbar { 
+        /* ツールバーを最上部に固定（編集時のみ表示） */
+        #editor-toolbar { 
             position: sticky; top: 0; width: 100%; 
             background: rgba(15, 15, 35, 0.95); 
             padding: 10px 0; display: flex; justify-content: center; flex-wrap: wrap; 
@@ -36,13 +36,14 @@
         }
         .tool-btn:hover { background: var(--accent); border-color: var(--accent); }
 
-        /* エディター本体 */
+        /* メインコンテナ */
         .editor-container { width: 95%; max-width: 900px; margin: 40px 20px; z-index: 1; }
         
         .card { 
             background: rgba(255, 255, 255, 0.05); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
-            border-radius: 15px; padding: 50px; border: 1px solid rgba(255, 74, 74, 0.2); 
+            border-radius: 20px; padding: 50px; border: 1px solid rgba(255, 74, 74, 0.2); 
             min-height: 80vh; box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+            display: flex; flex-direction: column;
         }
 
         /* タイトル（サイズ固定） */
@@ -53,38 +54,37 @@
         }
 
         /* 日付 */
-        .post-date {
-            font-size: 14px; color: #888; margin-bottom: 30px;
-            outline: none; display: block;
-        }
+        .post-date { font-size: 14px; color: #888; margin-bottom: 30px; outline: none; display: block; }
 
-        .editable { outline: none; line-height: 1.8; font-size: 1.1rem; color: #eee; }
+        .editable { outline: none; line-height: 1.8; font-size: 1.1rem; color: #eee; flex-grow: 1; }
 
-        /* 引用のデザイン */
+        /* 引用のデザイン（ご要望通り：左棒＋薄赤背景） */
         blockquote {
             background: rgba(255, 74, 74, 0.1) !important;
             border-left: 5px solid var(--accent) !important;
-            margin: 20px 0 !important;
-            padding: 15px 25px !important;
+            margin: 25px 0 !important;
+            padding: 20px 25px !important;
             font-style: italic;
-            color: #ddd;
+            color: #efefef;
+            border-radius: 0 10px 10px 0;
         }
 
         .editable img { max-width: 100%; border-radius: 10px; margin: 20px 0; }
+        a { color: var(--accent); }
 
-        /* フッターボタン */
-        .footer-zone { margin: 40px 0; display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
-        
-        .btn-main { 
-            background: var(--accent); color: white; padding: 12px 30px; 
-            border-radius: 50px; text-decoration: none; font-weight: bold;
-            border: none; cursor: pointer; transition: 0.3s;
+        /* 記事末尾のトップへ戻るボタン（書き出し後も残る） */
+        .blog-footer { 
+            margin-top: 50px; padding-top: 30px; 
+            border-top: 1px solid rgba(255,74,74,0.1); 
+            text-align: center; 
         }
-        .btn-main:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 74, 74, 0.4); }
         
-        .btn-secondary { background: transparent; border: 1px solid #666; color: #888; font-size: 14px; }
-
-        select, input[type="color"] { background: #222; color: #fff; border: 1px solid #444; padding: 5px; border-radius: 4px; }
+        .btn-home { 
+            display: inline-block; background: var(--accent); color: white; 
+            padding: 12px 30px; border-radius: 50px; text-decoration: none; 
+            font-weight: bold; transition: 0.3s;
+        }
+        .btn-home:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 74, 74, 0.4); }
 
         /* 隕石アニメーション */
         .inseki-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
@@ -95,15 +95,16 @@
         @media (max-width: 768px) {
             .card { padding: 25px; }
             .post-title { font-size: 24px !important; }
+            .toolbar { padding: 5px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="toolbar">
-        <button class="tool-btn" onclick="exec('bold')"><i class="fas fa-bold"></i></button>
-        <button class="tool-btn" onclick="addLink()"><i class="fas fa-link"></i></button>
-        <button class="tool-btn" onclick="document.getElementById('imgInput').click()"><i class="fas fa-image"></i></button>
+    <div id="editor-toolbar">
+        <button class="tool-btn" onclick="exec('bold')" title="太字"><i class="fas fa-bold"></i></button>
+        <button class="tool-btn" onclick="addLink()" title="リンク"><i class="fas fa-link"></i></button>
+        <button class="tool-btn" onclick="document.getElementById('imgInput').click()" title="画像挿入"><i class="fas fa-image"></i></button>
         <input type="file" id="imgInput" hidden accept="image/*" onchange="insertImage(this)">
         
         <select onchange="exec('fontSize', this.value)">
@@ -113,10 +114,10 @@
             <option value="6">最大</option>
         </select>
 
-        <input type="color" onchange="exec('foreColor', this.value)">
+        <input type="color" onchange="exec('foreColor', this.value)" title="文字色">
         <button class="tool-btn" onclick="exec('formatBlock', 'H2')">見出し</button>
         <button class="tool-btn" onclick="exec('formatBlock', 'blockquote')">引用</button>
-        <button class="tool-btn" onclick="downloadAsZip()" style="background:var(--accent)"><i class="fas fa-file-archive"></i> ZIP保存</button>
+        <button class="tool-btn" onclick="downloadAsZip()" style="background:var(--accent); border:none; font-weight:bold;"><i class="fas fa-file-archive"></i> ZIP保存</button>
     </div>
 
     <css-doodle click-to-update class="background">
@@ -125,30 +126,31 @@
     <div class="inseki-container"><div class="animated inseki"></div></div>
 
     <div class="editor-container">
-        <div class="card">
-            <div id="post-title" class="post-title" contenteditable="true">記事のタイトル</div>
-            <div id="post-date" class="post-date" contenteditable="true">2026年1月22日</div>
-            
-            <hr style="border:0; border-top:1px solid rgba(255,74,74,0.2); margin-bottom:20px;">
+        <article class="card">
+            <header>
+                <div id="post-title" class="post-title" contenteditable="true">新しい記事のタイトル</div>
+                <div id="post-date" class="post-date" contenteditable="true">2026年1月22日</div>
+                <hr style="border:0; border-top:1px solid rgba(255,74,74,0.2); margin-bottom:20px;">
+            </header>
 
             <div id="editor" class="editable" contenteditable="true">
-                <p>ここにブログの本文を書いてください。</p>
+                <p>ここに本文を入力してください。ツールバーを使って自由に装飾が可能です。</p>
             </div>
-        </div>
 
-        <div class="footer-zone">
-            <a href="https://nattomaki10000.github.io/" class="btn-main">
-                <i class="fas fa-home"></i> トップページに戻る
-            </a>
-            <p style="color:#555; font-size:12px;">nattomaki10000 Blog System</p>
-        </div>
+            <footer class="blog-footer">
+                <a href="https://nattomaki10000.github.io/" class="btn-home">
+                    <i class="fas fa-home"></i> トップページに戻る
+                </a>
+            </footer>
+        </article>
     </div>
 
     <script>
+        // リッチテキスト編集機能
         function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
 
         function addLink() {
-            const url = prompt("URLを入力してください:");
+            const url = prompt("リンク先URLを入力してください:");
             if (url) exec('createLink', url);
         }
 
@@ -161,27 +163,45 @@
             }
         }
 
+        // ZIP書き出し機能
         async function downloadAsZip() {
             const zip = new JSZip();
+            // 現在のHTMLをクローン
             let docClone = document.documentElement.cloneNode(true);
             
-            // 書き出し用HTMLから不要なツールを削除
-            docClone.querySelector('.toolbar').remove();
-            docClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            // 書き出し用HTMLからエディター専用のツールバーを削除
+            const toolbar = docClone.querySelector('#editor-toolbar');
+            if(toolbar) toolbar.remove();
+            
+            // 全ての編集可能属性(contenteditable)を解除
+            docClone.querySelectorAll('[contenteditable]').forEach(el => {
+                el.removeAttribute('contenteditable');
+            });
 
+            // クローンしたHTMLを文字列化
             const htmlContent = "<!DOCTYPE html>\n" + docClone.outerHTML;
+            
+            // index.htmlとしてZIPに追加
             zip.file("index.html", htmlContent);
             
+            // ZIPを生成してダウンロード
             const content = await zip.generateAsync({type:"blob"});
             const a = document.createElement('a');
+            const title = document.getElementById('post-title').innerText.trim();
             a.href = URL.createObjectURL(content);
-            a.download = "blog-post.zip";
+            a.download = `${title || 'blog-post'}.zip`;
             a.click();
         }
 
-        // タイトル内での改行を禁止し、フォントサイズ変更を防ぐための簡易ガード
-        document.getElementById('post-title').addEventListener('keydown', (e) => {
+        // タイトル内での改行とフォントサイズ変更を防ぐ
+        const titleEl = document.getElementById('post-title');
+        titleEl.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') e.preventDefault();
+        });
+        titleEl.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
         });
     </script>
 </body>
