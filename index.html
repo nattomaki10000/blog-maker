@@ -13,12 +13,22 @@
         :root { --accent: #ff4a4a; --bg: #0a0c27; }
         body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-        /* --- 宇宙背景 & 隕石 (初期デザイン) --- */
-        .background { position: fixed; inset: 0; z-index: -2; }
+        /* --- サイトと全く同じ背景 (css-doodle) --- */
+        .background { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
+
+        /* --- サイトと全く同じ隕石 (inseki) --- */
         .inseki-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-        .inseki::before { content: ""; position: absolute; width: 4px; height: 4px; background: transparent; box-shadow: 64px 4px 0 rgb(199, 0, 0), 48px 8px 0 rgb(255, 90, 0), 60px 8px 0 rgb(199, 0, 0), 32px 12px 0 rgb(235, 255, 37), 44px 12px 0 rgb(255, 90, 0), 56px 12px 0 rgb(199, 0, 0), 28px 16px 0 rgb(238, 255, 0), 40px 16px 0 rgb(255, 90, 0), 24px 20px 0 rgb(238, 255, 0), 48px 20px 0 rgb(199, 0, 0), 60px 20px 0 rgb(255, 75, 0), 32px 24px 0 rgb(255, 90, 0), 44px 24px 0 rgb(179, 0, 0), 56px 24px 0 rgb(255, 75, 0), 16px 28px 0 rgb(238, 255, 0), 28px 28px 0 rgb(255, 102, 0), 40px 28px 0 rgb(179, 0, 0), 52px 28px 0 rgb(255, 75, 0), 12px 32px 0 rgb(238, 255, 0), 24px 32px 0 rgb(255, 102, 0), 36px 32px 0 rgb(179, 0, 0), 12px 36px 0 rgb(133, 0, 0), 16px 36px 0 rgb(97, 39, 0), 20px 36px 0 rgb(133, 0, 0), 24px 36px 0 rgb(133, 0, 0), 32px 36px 0 rgb(179, 0, 0), 44px 36px 0 rgb(255, 75, 0), 56px 36px 0 rgb(235, 255, 37), 8px 40px 0 rgb(97, 39, 0), 12px 40px 0 rgb(97, 39, 0), 16px 40px 0 rgb(133, 0, 0), 20px 40px 0 rgb(133, 0, 0), 24px 40px 0 rgb(97, 39, 0), 28px 40px 0 rgb(97, 39, 0), 40px 40px 0 rgb(255, 75, 0), 52px 40px 0 rgb(235, 255, 37), 4px 44px 0 rgb(97, 39, 0), 8px 44px 0 rgb(97, 39, 0), 12px 44px 0 rgb(97, 39, 0), 16px 44px 0 rgb(97, 39, 0), 20px 44px 0 rgb(97, 39, 0), 24px 44px 0 rgb(133, 0, 0), 28px 44px 0 rgb(133, 0, 0), 32px 44px 0 rgb(97, 39, 0), 36px 44px 0 rgb(255, 75, 0), 48px 44px 0 rgb(235, 255, 37), 4px 48px 0 rgb(82, 16, 0), 8px 48px 0 rgb(82, 16, 0), 12px 48px 0 rgb(97, 39, 0), 16px 48px 0 rgb(97, 39, 0), 20px 48px 0 rgb(97, 39, 0), 24px 48px 0 rgb(97, 39, 0), 28px 48px 0 rgb(133, 0, 0), 32px 48px 0 rgb(97, 39, 0), 4px 52px 0 rgb(51, 10, 0), 8px 52px 0 rgb(82, 16, 0), 12px 52px 0 rgb(82, 16, 0), 16px 52px 0 rgb(97, 39, 0), 20px 52px 0 rgb(97, 39, 0), 24px 52px 0 rgb(97, 39, 0), 28px 52px 0 rgb(97, 39, 0), 32px 52px 0 rgb(133, 0, 0), 40px 52px 0 rgb(235, 255, 37), 4px 56px 0 rgb(51, 10, 0), 8px 56px 0 rgb(51, 10, 0), 12px 56px 0 rgb(82, 16, 0), 16px 56px 0 rgb(82, 16, 0), 20px 56px 0 rgb(97, 39, 0), 24px 56px 0 rgb(97, 39, 0), 28px 56px 0 rgb(97, 39, 0), 32px 56px 0 rgb(97, 39, 0), 36px 56px 0 rgb(235, 255, 37), 8px 60px 0 rgb(51, 10, 0), 12px 60px 0 rgb(51, 10, 0), 16px 60px 0 rgb(82, 16, 0), 20px 60px 0 rgb(82, 16, 0), 24px 60px 0 rgb(97, 39, 0), 28px 60px 0 rgb(97, 39, 0), 12px 64px 0 rgb(51, 10, 0), 16px 64px 0 rgb(51, 10, 0), 20px 64px 0 rgb(82, 16, 0), 24px 64px 0 rgb(97, 39, 0); }
-        .animated { animation: inseki 4s infinite linear; }
-        @keyframes inseki { 0% { transform: translate(100vw, -10vh) scale(1); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(-20vw, 110vh) scale(1.5); opacity: 0; } }
+        .inseki::before {
+            content: ""; position: absolute; top: -4px; left: -4px; width: 4px; height: 4px; background: transparent;
+            box-shadow: 64px 4px 0 rgb(199, 0, 0), 48px 8px 0 rgb(255, 90, 0), 60px 8px 0 rgb(199, 0, 0), 32px 12px 0 rgb(235, 255, 37), 44px 12px 0 rgb(255, 90, 0), 56px 12px 0 rgb(199, 0, 0), 28px 16px 0 rgb(238, 255, 0), 40px 16px 0 rgb(255, 90, 0), 24px 20px 0 rgb(238, 255, 0), 48px 20px 0 rgb(199, 0, 0), 60px 20px 0 rgb(255, 75, 0), 32px 24px 0 rgb(255, 90, 0), 44px 24px 0 rgb(179, 0, 0), 56px 24px 0 rgb(255, 75, 0), 16px 28px 0 rgb(238, 255, 0), 28px 28px 0 rgb(255, 102, 0), 40px 28px 0 rgb(179, 0, 0), 52px 28px 0 rgb(255, 75, 0), 12px 32px 0 rgb(238, 255, 0), 24px 32px 0 rgb(255, 102, 0), 36px 32px 0 rgb(179, 0, 0), 12px 36px 0 rgb(133, 0, 0), 16px 36px 0 rgb(97, 39, 0), 20px 36px 0 rgb(133, 0, 0), 24px 36px 0 rgb(133, 0, 0), 32px 36px 0 rgb(179, 0, 0), 44px 36px 0 rgb(255, 75, 0), 56px 36px 0 rgb(235, 255, 37), 8px 40px 0 rgb(97, 39, 0), 12px 40px 0 rgb(97, 39, 0), 16px 40px 0 rgb(133, 0, 0), 20px 40px 0 rgb(133, 0, 0), 24px 40px 0 rgb(97, 39, 0), 28px 40px 0 rgb(97, 39, 0), 40px 40px 0 rgb(255, 75, 0), 52px 40px 0 rgb(235, 255, 37), 4px 44px 0 rgb(97, 39, 0), 8px 44px 0 rgb(97, 39, 0), 12px 44px 0 rgb(97, 39, 0), 16px 44px 0 rgb(97, 39, 0), 20px 44px 0 rgb(97, 39, 0), 24px 44px 0 rgb(133, 0, 0), 28px 44px 0 rgb(133, 0, 0), 32px 44px 0 rgb(97, 39, 0), 36px 44px 0 rgb(255, 75, 0), 48px 44px 0 rgb(235, 255, 37), 4px 48px 0 rgb(82, 16, 0), 8px 48px 0 rgb(82, 16, 0), 12px 48px 0 rgb(97, 39, 0), 16px 48px 0 rgb(97, 39, 0), 20px 48px 0 rgb(97, 39, 0), 24px 48px 0 rgb(97, 39, 0), 28px 48px 0 rgb(133, 0, 0), 32px 48px 0 rgb(97, 39, 0), 4px 52px 0 rgb(51, 10, 0), 8px 52px 0 rgb(82, 16, 0), 12px 52px 0 rgb(82, 16, 0), 16px 52px 0 rgb(97, 39, 0), 20px 52px 0 rgb(97, 39, 0), 24px 52px 0 rgb(97, 39, 0), 28px 52px 0 rgb(97, 39, 0), 32px 52px 0 rgb(133, 0, 0), 40px 52px 0 rgb(235, 255, 37), 4px 56px 0 rgb(51, 10, 0), 8px 56px 0 rgb(51, 10, 0), 12px 56px 0 rgb(82, 16, 0), 16px 56px 0 rgb(82, 16, 0), 20px 56px 0 rgb(97, 39, 0), 24px 56px 0 rgb(97, 39, 0), 28px 56px 0 rgb(97, 39, 0), 32px 56px 0 rgb(97, 39, 0), 36px 56px 0 rgb(235, 255, 37), 8px 60px 0 rgb(51, 10, 0), 12px 60px 0 rgb(51, 10, 0), 16px 60px 0 rgb(82, 16, 0), 20px 60px 0 rgb(82, 16, 0), 24px 60px 0 rgb(97, 39, 0), 28px 60px 0 rgb(97, 39, 0), 12px 64px 0 rgb(51, 10, 0), 16px 64px 0 rgb(51, 10, 0), 20px 64px 0 rgb(82, 16, 0), 24px 64px 0 rgb(97, 39, 0);
+        }
+        .animated { animation: inseki 3s infinite linear; }
+        @keyframes inseki {
+            0% { transform: translate(800px,-300px) scale(1,1) rotate(0deg) skew(0deg,0deg); opacity: 1.0; }
+            20% { transform: translate(500px,0px) scale(1.25,1.25) rotate(0deg) skew(1.5deg,1.5deg); opacity: 1.0; }
+            40% { transform: translate(200px,300px) scale(1.5,1.5) rotate(0deg) skew(3deg,3deg); opacity: 1.0; }
+            100% { transform: translate(-700px,1200px) scale(1.5,1.5) rotate(0deg) skew(3deg,3deg); opacity: 1.0; }
+        }
 
         /* --- UI スタイル --- */
         #editor-toolbar { 
@@ -28,44 +38,39 @@
             gap: 10px; z-index: 1000; border-bottom: 1px solid var(--accent);
             -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
         }
-        .tool-btn, .tool-select { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; font-family: inherit; outline: none; }
+        .tool-btn, .tool-select { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; outline: none; }
         .tool-btn:hover, .tool-select:hover { border-color: var(--accent); background: #333; }
-        input[type="color"].tool-btn { padding: 2px 5px; height: 36px; width: 45px; }
 
-        /* --- エディターエリア --- */
+        /* --- エディターエリア (カードの質感を同期) --- */
         .editor-container { width: 95%; max-width: 900px; margin: 40px 20px; z-index: 1; }
         .card { 
-            background: rgba(255, 255, 255, 0.05); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
-            border-radius: 20px; padding: 50px; border: 1px solid rgba(255, 74, 74, 0.2); 
+            background: rgba(255, 74, 74, 0.1); /* サイトと同じ色 */
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); /* サイトと同じぼかし */
+            border-radius: 20px; padding: 50px; border: 1px solid rgba(255, 0, 0, 0.25); 
             min-height: 80vh; box-shadow: 0 10px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column;
         }
 
-        .post-title { font-size: 32px !important; color: var(--accent); margin-bottom: 5px; border: none; background: transparent; width: 100%; outline: none; font-weight: bold; }
+        .post-title { font-size: 32px !important; color: #ff0000; margin-bottom: 5px; border: none; background: transparent; width: 100%; outline: none; font-weight: bold; text-shadow: 0 0 20px rgba(255, 74, 74, 0.5); }
         .post-date { font-size: 14px; color: #888; margin-bottom: 30px; outline: none; }
         .editable { outline: none; line-height: 1.8; font-size: 1.1rem; color: #eee; flex-grow: 1; }
 
-        /* 引用スタイル */
-        blockquote { background: rgba(255, 74, 74, 0.1) !important; border-left: 5px solid var(--accent) !important; margin: 25px 0 !important; padding: 20px 25px !important; font-style: italic; border-radius: 0 10px 10px 0; }
-        
-        /* 画像スタイル */
+        blockquote { background: rgba(255, 74, 74, 0.1) !important; border-left: 5px solid #ff4a4a !important; margin: 25px 0 !important; padding: 20px 25px !important; font-style: italic; border-radius: 0 10px 10px 0; }
         .editable img { max-width: 100%; border-radius: 10px; margin: 10px 0; cursor: pointer; transition: 0.2s; }
-        .editable img:hover { outline: 2px solid var(--accent); }
+        .editable img:hover { outline: 2px solid #ff0000; }
 
-        /* フッターボタン */
         .blog-footer { margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255,74,74,0.1); text-align: center; }
-        .btn-home { display: inline-block; background: var(--accent); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        .btn-home:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 74, 74, 0.4); }
+        .btn-home { display: inline-block; background: #ff0000; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: 0.3s; }
 
-        @media (max-width: 768px) { .card { padding: 25px; } .post-title { font-size: 24px !important; } }
+        @media (max-width: 768px) { .card { padding: 25px; width: 85%; } .post-title { font-size: 24px !important; } }
     </style>
 </head>
 <body>
 
     <div id="editor-toolbar">
-        <button class="tool-btn" onclick="exec('bold')" title="太字"><i class="fas fa-bold"></i></button>
-        <button class="tool-btn" onclick="exec('italic')" title="斜体"><i class="fas fa-italic"></i></button>
-        <button class="tool-btn" onclick="addLink()" title="リンク"><i class="fas fa-link"></i></button>
-        <button class="tool-btn" onclick="document.getElementById('imgInput').click()" title="画像"><i class="fas fa-image"></i></button>
+        <button class="tool-btn" onclick="exec('bold')"><i class="fas fa-bold"></i></button>
+        <button class="tool-btn" onclick="exec('italic')"><i class="fas fa-italic"></i></button>
+        <button class="tool-btn" onclick="addLink()"><i class="fas fa-link"></i></button>
+        <button class="tool-btn" onclick="document.getElementById('imgInput').click()"><i class="fas fa-image"></i></button>
         <input type="file" id="imgInput" hidden accept="image/*" onchange="insertImage(this)">
         
         <select class="tool-select" onchange="exec('fontSize', this.value)">
@@ -80,38 +85,40 @@
         <input type="color" class="tool-btn" onchange="exec('foreColor', this.value)">
         <button class="tool-btn" onclick="toggleBlock('H2')">見出し</button>
         <button class="tool-btn" onclick="toggleBlock('blockquote')">引用</button>
-        <button class="tool-btn" onclick="downloadAsZip()" style="background:var(--accent); border:none; font-weight:bold;"><i class="fas fa-file-archive"></i> ZIP保存</button>
+        <button class="tool-btn" onclick="downloadAsZip()" style="background:#ff0000; border:none; font-weight:bold;"><i class="fas fa-file-archive"></i> ZIP保存</button>
     </div>
 
     <css-doodle click-to-update class="background">
         <style>
-            @grid: 1 / 100vw 100vh / #0a0c27;
-            background-size: 200px 200px;
-            background-image: @doodle(
-                @grid: 6 / 100%;
-                @size: 4px;
-                font-size: 4px;
-                color: hsl(@r240, 30%, 50%);
-                box-shadow: @m3x5(
-                    calc(4em - @nx * 1em) calc(@ny * 1em) @p(@m3(currentColor), @m2(transparent)),
-                    calc(2em + @nx * 1em) calc(@ny * 1em) @lp
-                );
-            );
-        </style>
+          @grid: 1 / 100vw 100vh / #0a0c27;
+          background-size: 200px 200px;
+          background-image: @doodle(
+          @grid: 6 / 100%;
+          @size: 4px;
+          font-size: 4px;
+          color: hsl(@r240, 30%, 50%);
+          box-shadow: @m3x5(
+          calc(4em - @nx * 1em) calc(@ny * 1em)
+              @p(@m3(currentColor), @m2(transparent)),
+          calc(2em + @nx * 1em) calc(@ny * 1em)
+              @lp
+          );
+        );
+      </style>
     </css-doodle>
-    
+
     <div class="inseki-container"><div class="animated inseki"></div></div>
 
     <div class="editor-container">
         <article class="card">
             <header>
-                <div id="post-title" class="post-title" contenteditable="true">新しい記事のタイトル</div>
-                <div id="post-date" class="post-date" contenteditable="true">2026年1月23日</div>
-                <hr style="border:0; border-top:1px solid rgba(255,74,74,0.2); margin-bottom:20px;">
+                <div id="post-title" class="post-title" contenteditable="true">記事のタイトル</div>
+                <div id="post-date" class="post-date" contenteditable="true">2026年1月22日</div>
+                <hr style="border:0; border-top:1px solid rgba(255,0,0,0.2); margin-bottom:20px;">
             </header>
 
             <div id="editor" class="editable" contenteditable="true">
-                <p>ここにブログを執筆してください。画像をクリックするとサイズ調整が可能です。</p>
+                <p>ここに本文を入力してください。画像をクリックするとサイズ変更ができます。</p>
             </div>
 
             <footer class="blog-footer">
@@ -123,36 +130,27 @@
     </div>
 
     <script>
-        // 基本コマンド
         function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
 
-        // 見出し・引用のトグル機能
         function toggleBlock(tag) {
             const selection = window.getSelection();
             if (!selection.rangeCount) return;
             let node = selection.anchorNode;
             if (node.nodeType === 3) node = node.parentNode;
-            
             let isInside = false;
             let current = node;
             while (current && current.id !== 'editor') {
-                if (current.tagName === tag.toUpperCase()) {
-                    isInside = true;
-                    break;
-                }
+                if (current.tagName === tag.toUpperCase()) { isInside = true; break; }
                 current = current.parentNode;
             }
-            // すでにそのタグなら解除(pにする)、そうでなければ適用
             exec('formatBlock', isInside ? 'p' : tag);
         }
 
-        // リンク追加
         function addLink() {
-            const url = prompt("リンク先URLを入力してください:");
+            const url = prompt("URLを入力してください:");
             if (url) exec('createLink', url);
         }
 
-        // 画像挿入
         function insertImage(input) {
             const file = input.files[0];
             if (file) {
@@ -162,33 +160,27 @@
             }
         }
 
-        // 画像リサイズ（クリックで発動）
+        // 画像リサイズ
         document.getElementById('editor').addEventListener('click', (e) => {
             if (e.target.tagName === 'IMG') {
                 const currentWidth = e.target.style.width.replace('%', '') || '100';
-                const newWidth = prompt("画像の幅を%で指定してください (10-100):", currentWidth);
+                const newWidth = prompt("画像の幅(%)を指定 (10-100):", currentWidth);
                 if (newWidth !== null && !isNaN(newWidth)) {
                     e.target.style.width = newWidth + '%';
-                    e.target.style.height = 'auto'; // アスペクト比維持
+                    e.target.style.height = 'auto';
                 }
             }
         });
 
-        // ZIP書き出し（背景情報を維持したまま保存）
+        // 保存時にスタイルを完全に維持
         async function downloadAsZip() {
             const zip = new JSZip();
             let docClone = document.documentElement.cloneNode(true);
-            
-            // ツールバーを削除
             const toolbar = docClone.querySelector('#editor-toolbar');
             if(toolbar) toolbar.remove();
-            
-            // 編集機能を無効化
             docClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-
             const htmlContent = "<!DOCTYPE html>\n" + docClone.outerHTML;
             zip.file("index.html", htmlContent);
-            
             const content = await zip.generateAsync({type:"blob"});
             const a = document.createElement('a');
             const title = document.getElementById('post-title').innerText.trim();
@@ -197,10 +189,7 @@
             a.click();
         }
 
-        // タイトル改行禁止
-        document.getElementById('post-title').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') e.preventDefault();
-        });
+        document.getElementById('post-title').addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
     </script>
 </body>
 </html>
