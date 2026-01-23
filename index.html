@@ -10,11 +10,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
-        :root { --accent: #ff4a4a; --bg: #0a0c27; }
+        :root { --accent: #ff0000; --bg: #0a0c27; }
         body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
 
-        /* 背景と隕石のスタイル（メインサイトと同期） */
-        .background { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
+        /* 背景と隕石 */
+        .background { position: fixed; inset: 0; z-index: -2; }
         .inseki-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
         .inseki::before {
             content: ""; position: absolute; top: -4px; left: -4px; width: 4px; height: 4px; background: transparent;
@@ -28,60 +28,45 @@
             100% { transform: translate(-700px,1200px) scale(1.5,1.5) rotate(0deg) skew(3deg,3deg); opacity: 1.0; }
         }
 
-        /* エディターUI */
+        /* エディター用ツールバー */
         #editor-toolbar { 
-            position: sticky; top: 0; width: 100%; background: rgba(15, 15, 35, 0.95); padding: 10px 0; 
-            display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; z-index: 1000; border-bottom: 1px solid var(--accent);
-            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            position: sticky; top: 0; width: 100%; background: rgba(15, 15, 35, 0.9); padding: 10px 0; 
+            display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; z-index: 1000; border-bottom: 1px solid var(--accent);
+            backdrop-filter: blur(10px);
         }
-        .tool-btn, .tool-select { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; outline: none; }
-        .tool-btn:hover, .tool-select:hover { border-color: var(--accent); background: #333; }
+        .tool-btn, .tool-select { background: #111; border: 1px solid #444; color: #fff; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; outline: none; }
+        .tool-btn:hover { border-color: var(--accent); }
 
-        /* カードの質感 (メインサイトと同期) */
-        .editor-container { width: 95%; max-width: 900px; margin: 40px 20px; z-index: 1; }
+        /* ブログカードの質感 */
+        .editor-container { width: 95%; max-width: 850px; margin: 40px auto; z-index: 1; }
         .card { 
-            background: rgba(255, 74, 74, 0.1); 
-            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-            border-radius: 20px; padding: 50px; border: 1px solid rgba(255, 0, 0, 0.25); 
-            min-height: 80vh; box-shadow: 0 10px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column;
+            background: rgba(255, 74, 74, 0.1); backdrop-filter: blur(10px); border-radius: 20px; 
+            padding: 40px; border: 1px solid rgba(255, 0, 0, 0.25); min-height: 70vh; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
 
-        .post-title { font-size: 32px !important; color: #ff0000; margin-bottom: 5px; border: none; background: transparent; width: 100%; outline: none; font-weight: bold; text-shadow: 0 0 20px rgba(255, 74, 74, 0.5); }
-        .post-date { font-size: 14px; color: #888; margin-bottom: 30px; outline: none; }
-        .editable { outline: none; line-height: 1.8; font-size: 1.1rem; color: #eee; flex-grow: 1; }
+        .post-title { font-size: 30px !important; color: #ff0000; border: none; background: transparent; width: 100%; outline: none; font-weight: bold; text-shadow: 0 0 15px rgba(255, 0, 0, 0.4); margin-bottom: 10px; }
+        .post-date { font-size: 14px; color: #777; margin-bottom: 25px; outline: none; }
+        .editable { outline: none; line-height: 1.8; font-size: 1.05rem; color: #eee; }
 
-        blockquote { background: rgba(255, 74, 74, 0.1) !important; border-left: 5px solid #ff4a4a !important; margin: 25px 0 !important; padding: 20px 25px !important; font-style: italic; border-radius: 0 10px 10px 0; }
-        .editable img { max-width: 100%; border-radius: 10px; margin: 10px 0; cursor: pointer; transition: 0.2s; }
-        .editable img:hover { outline: 2px solid #ff0000; }
+        blockquote { background: rgba(255, 74, 74, 0.08) !important; border-left: 4px solid var(--accent) !important; margin: 20px 0 !important; padding: 15px 20px !important; font-style: italic; }
+        .editable img { max-width: 100%; border-radius: 8px; cursor: pointer; display: block; margin: 15px 0; }
 
-        .blog-footer { margin-top: 50px; padding-top: 30px; border-top: 1px solid rgba(255,74,74,0.1); text-align: center; }
-        .btn-home { display: inline-block; background: #ff0000; color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: 0.3s; }
-
-        @media (max-width: 768px) { .card { padding: 25px; width: 85%; } .post-title { font-size: 24px !important; } }
+        .btn-home { display: inline-block; background: #ff0000; color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 40px; }
     </style>
 </head>
 <body>
 
     <div id="editor-toolbar">
-        <button class="tool-btn" onclick="exec('bold')"><i class="fas fa-bold"></i></button>
-        <button class="tool-btn" onclick="exec('italic')"><i class="fas fa-italic"></i></button>
-        <button class="tool-btn" onclick="addLink()"><i class="fas fa-link"></i></button>
-        <button class="tool-btn" onclick="document.getElementById('imgInput').click()"><i class="fas fa-image"></i></button>
+        <button class="tool-btn" onclick="exec('bold')">B</button>
+        <button class="tool-btn" onclick="exec('italic')">I</button>
+        <button class="tool-btn" onclick="document.getElementById('imgInput').click()">画像</button>
         <input type="file" id="imgInput" hidden accept="image/*" onchange="insertImage(this)">
-        
         <select class="tool-select" onchange="exec('fontSize', this.value)">
-            <option value="3">サイズ: 中</option>
-            <option value="1">極小</option>
-            <option value="2">小</option>
-            <option value="4">大</option>
-            <option value="5">特大</option>
-            <option value="6">最大</option>
+            <option value="3">サイズ:中</option><option value="2">小</option><option value="5">大</option>
         </select>
-
-        <input type="color" class="tool-btn" onchange="exec('foreColor', this.value)">
         <button class="tool-btn" onclick="toggleBlock('H2')">見出し</button>
         <button class="tool-btn" onclick="toggleBlock('blockquote')">引用</button>
-        <button class="tool-btn" onclick="downloadAsZip()" style="background:#ff0000; border:none; font-weight:bold;"><i class="fas fa-file-archive"></i> ZIP保存</button>
+        <button class="tool-btn" onclick="save()" style="background:#ff0000; border:none;">ZIP保存</button>
     </div>
 
     <css-doodle click-to-update class="background">
@@ -107,46 +92,30 @@
 
     <div class="editor-container">
         <article class="card">
-            <header>
-                <div id="post-title" class="post-title" contenteditable="true">記事のタイトル</div>
-                <div id="post-date" class="post-date" contenteditable="true">2026年1月22日</div>
-                <hr style="border:0; border-top:1px solid rgba(255,0,0,0.2); margin-bottom:20px;">
-            </header>
-
+            <div id="post-title" class="post-title" contenteditable="true">タイトル</div>
+            <div id="post-date" class="post-date" contenteditable="true">2026.01.23</div>
             <div id="editor" class="editable" contenteditable="true">
-                <p>ここに本文を入力してください。</p>
+                <p>ここにブログを書いてください。</p>
             </div>
-
-            <footer class="blog-footer">
-                <a href="https://nattomaki10000.github.io/" class="btn-home">
-                    <i class="fas fa-home"></i> トップページに戻る
-                </a>
-            </footer>
+            <center><a href="https://nattomaki10000.github.io/" class="btn-home">HOME</a></center>
         </article>
     </div>
 
-    <script>
+    <script id="editor-script">
         function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
-
         function toggleBlock(tag) {
             const selection = window.getSelection();
             if (!selection.rangeCount) return;
             let node = selection.anchorNode;
             if (node.nodeType === 3) node = node.parentNode;
             let isInside = false;
-            let current = node;
-            while (current && current.id !== 'editor') {
-                if (current.tagName === tag.toUpperCase()) { isInside = true; break; }
-                current = current.parentNode;
+            let curr = node;
+            while (curr && curr.id !== 'editor') {
+                if (curr.tagName === tag.toUpperCase()) { isInside = true; break; }
+                curr = curr.parentNode;
             }
             exec('formatBlock', isInside ? 'p' : tag);
         }
-
-        function addLink() {
-            const url = prompt("URLを入力してください:");
-            if (url) exec('createLink', url);
-        }
-
         function insertImage(input) {
             const file = input.files[0];
             if (file) {
@@ -155,45 +124,37 @@
                 reader.readAsDataURL(file);
             }
         }
-
-        // 画像リサイズ
         document.getElementById('editor').addEventListener('click', (e) => {
             if (e.target.tagName === 'IMG') {
-                const currentWidth = e.target.style.width.replace('%', '') || '100';
-                const newWidth = prompt("画像の幅(%)を指定してください:", currentWidth);
-                if (newWidth !== null && !isNaN(newWidth)) {
-                    e.target.style.width = newWidth + '%';
-                    e.target.style.height = 'auto';
-                }
+                const w = prompt("幅(%)を指定:", e.target.style.width.replace('%','') || '100');
+                if (w) { e.target.style.width = w + '%'; e.target.style.height = 'auto'; }
             }
         });
 
-        // 保存ロジック：css-doodleタグとスクリプトを確実に含める
-        async function downloadAsZip() {
+        async function save() {
             const zip = new JSZip();
-            // ドキュメント全体を複製
-            let docClone = document.documentElement.cloneNode(true);
+            let clone = document.documentElement.cloneNode(true);
             
-            // エディターUIを削除
-            const toolbar = docClone.querySelector('#editor-toolbar');
+            // 不要なものを削除
+            const toolbar = clone.querySelector('#editor-toolbar');
+            const script = clone.querySelector('#editor-script'); // このスクリプト自身を削除
+            const jszipScript = Array.from(clone.querySelectorAll('script')).find(s => s.src.includes('jszip'));
+            
             if(toolbar) toolbar.remove();
+            if(script) script.remove();
+            if(jszipScript) jszipScript.remove();
             
-            // 編集機能を無効化（タグはそのまま残す）
-            docClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            // 編集不可にする
+            clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
 
-            // head内のスクリプトやスタイルを維持したまま文字列化
-            const htmlContent = "<!DOCTYPE html>\n" + docClone.outerHTML;
-            
-            zip.file("index.html", htmlContent);
-            const content = await zip.generateAsync({type:"blob"});
+            const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+            zip.file("index.html", html);
+            const blob = await zip.generateAsync({type:"blob"});
             const a = document.createElement('a');
-            const title = document.getElementById('post-title').innerText.trim();
-            a.href = URL.createObjectURL(content);
-            a.download = `${title || 'blog-post'}.zip`;
+            a.href = URL.createObjectURL(blob);
+            a.download = `blog-${Date.now()}.zip`;
             a.click();
         }
-
-        document.getElementById('post-title').addEventListener('keydown', (e) => { if (e.key === 'Enter') e.preventDefault(); });
     </script>
 </body>
 </html>
