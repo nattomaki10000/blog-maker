@@ -11,10 +11,12 @@
 
     <style>
         :root { --accent: #ff4a4a; --bg: #0a0c27; }
-        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-        /* 背景と隕石のスタイル（メインサイトと同期） */
+        /* --- サイトと全く同じ背景 (css-doodle) --- */
         .background { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
+
+        /* --- サイトと全く同じ隕石 (inseki) --- */
         .inseki-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
         .inseki::before {
             content: ""; position: absolute; top: -4px; left: -4px; width: 4px; height: 4px; background: transparent;
@@ -28,20 +30,22 @@
             100% { transform: translate(-700px,1200px) scale(1.5,1.5) rotate(0deg) skew(3deg,3deg); opacity: 1.0; }
         }
 
-        /* エディターUI */
+        /* --- UI スタイル --- */
         #editor-toolbar { 
-            position: sticky; top: 0; width: 100%; background: rgba(15, 15, 35, 0.95); padding: 10px 0; 
-            display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; z-index: 1000; border-bottom: 1px solid var(--accent);
+            position: sticky; top: 0; width: 100%; 
+            background: rgba(15, 15, 35, 0.95); padding: 10px 0; 
+            display: flex; justify-content: center; flex-wrap: wrap; 
+            gap: 10px; z-index: 1000; border-bottom: 1px solid var(--accent);
             -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
         }
         .tool-btn, .tool-select { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; outline: none; }
         .tool-btn:hover, .tool-select:hover { border-color: var(--accent); background: #333; }
 
-        /* カードの質感 (メインサイトと同期) */
+        /* --- エディターエリア (カードの質感を同期) --- */
         .editor-container { width: 95%; max-width: 900px; margin: 40px 20px; z-index: 1; }
         .card { 
-            background: rgba(255, 74, 74, 0.1); 
-            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            background: rgba(255, 74, 74, 0.1); /* サイトと同じ色 */
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); /* サイトと同じぼかし */
             border-radius: 20px; padding: 50px; border: 1px solid rgba(255, 0, 0, 0.25); 
             min-height: 80vh; box-shadow: 0 10px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column;
         }
@@ -114,7 +118,7 @@
             </header>
 
             <div id="editor" class="editable" contenteditable="true">
-                <p>ここに本文を入力してください。</p>
+                <p>ここに本文を入力してください。画像をクリックするとサイズ変更ができます。</p>
             </div>
 
             <footer class="blog-footer">
@@ -160,7 +164,7 @@
         document.getElementById('editor').addEventListener('click', (e) => {
             if (e.target.tagName === 'IMG') {
                 const currentWidth = e.target.style.width.replace('%', '') || '100';
-                const newWidth = prompt("画像の幅(%)を指定してください:", currentWidth);
+                const newWidth = prompt("画像の幅(%)を指定 (10-100):", currentWidth);
                 if (newWidth !== null && !isNaN(newWidth)) {
                     e.target.style.width = newWidth + '%';
                     e.target.style.height = 'auto';
@@ -168,22 +172,14 @@
             }
         });
 
-        // 保存ロジック：css-doodleタグとスクリプトを確実に含める
+        // 保存時にスタイルを完全に維持
         async function downloadAsZip() {
             const zip = new JSZip();
-            // ドキュメント全体を複製
             let docClone = document.documentElement.cloneNode(true);
-            
-            // エディターUIを削除
             const toolbar = docClone.querySelector('#editor-toolbar');
             if(toolbar) toolbar.remove();
-            
-            // 編集機能を無効化（タグはそのまま残す）
             docClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-
-            // head内のスクリプトやスタイルを維持したまま文字列化
             const htmlContent = "<!DOCTYPE html>\n" + docClone.outerHTML;
-            
             zip.file("index.html", htmlContent);
             const content = await zip.generateAsync({type:"blob"});
             const a = document.createElement('a');
