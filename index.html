@@ -3,70 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>nattomaki10000 Blog Studio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js" defer></script>
+    <title>Blog Studio - nattomaki10000</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://esm.sh/css-doodle/css-doodle.min.js?raw"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
         :root { --accent: #ff0000; --bg: #0a0c27; }
-        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
+        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; overflow-x: hidden; }
 
-        /* 背景と隕石 */
-        .background { position: fixed; inset: 0; z-index: -2; }
+        /* 背景：css-doodle を最背面に固定 */
+        .background { position: fixed; inset: 0; z-index: -2; width: 100vw; height: 100vh; }
+
+        /* 隕石アニメーション */
         .inseki-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
         .inseki::before {
-            content: ""; position: absolute; top: -4px; left: -4px; width: 4px; height: 4px; background: transparent;
+            content: ""; position: absolute; top: -4px; left: -4px; width: 4px; height: 4px;
             box-shadow: 64px 4px 0 rgb(199, 0, 0), 48px 8px 0 rgb(255, 90, 0), 60px 8px 0 rgb(199, 0, 0), 32px 12px 0 rgb(235, 255, 37), 44px 12px 0 rgb(255, 90, 0), 56px 12px 0 rgb(199, 0, 0), 28px 16px 0 rgb(238, 255, 0), 40px 16px 0 rgb(255, 90, 0), 24px 20px 0 rgb(238, 255, 0), 48px 20px 0 rgb(199, 0, 0), 60px 20px 0 rgb(255, 75, 0), 32px 24px 0 rgb(255, 90, 0), 44px 24px 0 rgb(179, 0, 0), 56px 24px 0 rgb(255, 75, 0), 16px 28px 0 rgb(238, 255, 0), 28px 28px 0 rgb(255, 102, 0), 40px 28px 0 rgb(179, 0, 0), 52px 28px 0 rgb(255, 75, 0), 12px 32px 0 rgb(238, 255, 0), 24px 32px 0 rgb(255, 102, 0), 36px 32px 0 rgb(179, 0, 0), 12px 36px 0 rgb(133, 0, 0), 16px 36px 0 rgb(97, 39, 0), 20px 36px 0 rgb(133, 0, 0), 24px 36px 0 rgb(133, 0, 0), 32px 36px 0 rgb(179, 0, 0), 44px 36px 0 rgb(255, 75, 0), 56px 36px 0 rgb(235, 255, 37), 8px 40px 0 rgb(97, 39, 0), 12px 40px 0 rgb(97, 39, 0), 16px 40px 0 rgb(133, 0, 0), 20px 40px 0 rgb(133, 0, 0), 24px 40px 0 rgb(97, 39, 0), 28px 40px 0 rgb(97, 39, 0), 40px 40px 0 rgb(255, 75, 0), 52px 40px 0 rgb(235, 255, 37), 4px 44px 0 rgb(97, 39, 0), 8px 44px 0 rgb(97, 39, 0), 12px 44px 0 rgb(97, 39, 0), 16px 44px 0 rgb(97, 39, 0), 20px 44px 0 rgb(97, 39, 0), 24px 44px 0 rgb(133, 0, 0), 28px 44px 0 rgb(133, 0, 0), 32px 44px 0 rgb(97, 39, 0), 36px 44px 0 rgb(255, 75, 0), 48px 44px 0 rgb(235, 255, 37), 4px 48px 0 rgb(82, 16, 0), 8px 48px 0 rgb(82, 16, 0), 12px 48px 0 rgb(97, 39, 0), 16px 48px 0 rgb(97, 39, 0), 20px 48px 0 rgb(97, 39, 0), 24px 48px 0 rgb(97, 39, 0), 28px 48px 0 rgb(133, 0, 0), 32px 48px 0 rgb(97, 39, 0), 4px 52px 0 rgb(51, 10, 0), 8px 52px 0 rgb(82, 16, 0), 12px 52px 0 rgb(82, 16, 0), 16px 52px 0 rgb(97, 39, 0), 20px 52px 0 rgb(97, 39, 0), 24px 52px 0 rgb(97, 39, 0), 28px 52px 0 rgb(97, 39, 0), 32px 52px 0 rgb(133, 0, 0), 40px 52px 0 rgb(235, 255, 37), 4px 56px 0 rgb(51, 10, 0), 8px 56px 0 rgb(51, 10, 0), 12px 56px 0 rgb(82, 16, 0), 16px 56px 0 rgb(82, 16, 0), 20px 56px 0 rgb(97, 39, 0), 24px 56px 0 rgb(97, 39, 0), 28px 56px 0 rgb(97, 39, 0), 32px 56px 0 rgb(97, 39, 0), 36px 56px 0 rgb(235, 255, 37), 8px 60px 0 rgb(51, 10, 0), 12px 60px 0 rgb(51, 10, 0), 16px 60px 0 rgb(82, 16, 0), 20px 60px 0 rgb(82, 16, 0), 24px 60px 0 rgb(97, 39, 0), 28px 60px 0 rgb(97, 39, 0), 12px 64px 0 rgb(51, 10, 0), 16px 64px 0 rgb(51, 10, 0), 20px 64px 0 rgb(82, 16, 0), 24px 64px 0 rgb(97, 39, 0);
         }
         .animated { animation: inseki 3s infinite linear; }
         @keyframes inseki {
-            0% { transform: translate(800px,-300px) scale(1,1) rotate(0deg) skew(0deg,0deg); opacity: 1.0; }
-            20% { transform: translate(500px,0px) scale(1.25,1.25) rotate(0deg) skew(1.5deg,1.5deg); opacity: 1.0; }
-            40% { transform: translate(200px,300px) scale(1.5,1.5) rotate(0deg) skew(3deg,3deg); opacity: 1.0; }
-            100% { transform: translate(-700px,1200px) scale(1.5,1.5) rotate(0deg) skew(3deg,3deg); opacity: 1.0; }
+            0% { transform: translate(800px,-300px) skew(0deg); opacity: 1; }
+            100% { transform: translate(-700px,1200px) skew(3deg); opacity: 1; }
         }
 
-        /* エディター用ツールバー */
-        #editor-toolbar { 
-            position: sticky; top: 0; width: 100%; background: rgba(15, 15, 35, 0.9); padding: 10px 0; 
-            display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; z-index: 1000; border-bottom: 1px solid var(--accent);
-            backdrop-filter: blur(10px);
-        }
-        .tool-btn, .tool-select { background: #111; border: 1px solid #444; color: #fff; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 13px; outline: none; }
-        .tool-btn:hover { border-color: var(--accent); }
+        /* ツールバー */
+        #toolbar { position: sticky; top: 0; width: 100%; background: rgba(10, 12, 39, 0.9); padding: 10px; display: flex; justify-content: center; gap: 8px; z-index: 1000; border-bottom: 1px solid var(--accent); backdrop-filter: blur(10px); }
+        .btn { background: #111; border: 1px solid #444; color: #fff; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+        .btn:hover { border-color: var(--accent); }
 
-        /* ブログカードの質感 */
-        .editor-container { width: 95%; max-width: 850px; margin: 40px auto; z-index: 1; }
+        /* カードの修正（透明度を下げて視認性を確保） */
+        .container { width: 95%; max-width: 800px; margin: 40px auto; z-index: 1; position: relative; }
         .card { 
-            background: rgba(255, 74, 74, 0.1); backdrop-filter: blur(10px); border-radius: 20px; 
-            padding: 40px; border: 1px solid rgba(255, 0, 0, 0.25); min-height: 70vh; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            background: rgba(15, 15, 35, 0.9); /* 透明度を0.1から0.9に変更 */
+            backdrop-filter: blur(15px); border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 15px; padding: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
-        .post-title { font-size: 30px !important; color: #ff0000; border: none; background: transparent; width: 100%; outline: none; font-weight: bold; text-shadow: 0 0 15px rgba(255, 0, 0, 0.4); margin-bottom: 10px; }
-        .post-date { font-size: 14px; color: #777; margin-bottom: 25px; outline: none; }
-        .editable { outline: none; line-height: 1.8; font-size: 1.05rem; color: #eee; }
-
-        blockquote { background: rgba(255, 74, 74, 0.08) !important; border-left: 4px solid var(--accent) !important; margin: 20px 0 !important; padding: 15px 20px !important; font-style: italic; }
-        .editable img { max-width: 100%; border-radius: 8px; cursor: pointer; display: block; margin: 15px 0; }
-
-        .btn-home { display: inline-block; background: #ff0000; color: white; padding: 10px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 40px; }
+        .title { font-size: 28px; color: var(--accent); border: none; background: transparent; width: 100%; outline: none; font-weight: bold; text-shadow: 0 0 15px rgba(255, 0, 0, 0.3); }
+        .date { font-size: 14px; color: #666; margin: 10px 0 25px; outline: none; }
+        .editor { outline: none; line-height: 1.8; color: #ddd; min-height: 50vh; }
+        
+        .home-btn { display: inline-block; background: var(--accent); color: #fff; padding: 10px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; margin-top: 40px; }
     </style>
 </head>
 <body>
 
-    <div id="editor-toolbar">
-        <button class="tool-btn" onclick="exec('bold')">B</button>
-        <button class="tool-btn" onclick="exec('italic')">I</button>
-        <button class="tool-btn" onclick="document.getElementById('imgInput').click()">画像</button>
-        <input type="file" id="imgInput" hidden accept="image/*" onchange="insertImage(this)">
-        <select class="tool-select" onchange="exec('fontSize', this.value)">
-            <option value="3">サイズ:中</option><option value="2">小</option><option value="5">大</option>
-        </select>
-        <button class="tool-btn" onclick="toggleBlock('H2')">見出し</button>
-        <button class="tool-btn" onclick="toggleBlock('blockquote')">引用</button>
-        <button class="tool-btn" onclick="save()" style="background:#ff0000; border:none;">ZIP保存</button>
+    <div id="toolbar">
+        <button class="btn" onclick="exec('bold')">B</button>
+        <button class="btn" onclick="exec('italic')">I</button>
+        <button class="btn" onclick="document.getElementById('imgIn').click()">画像</button>
+        <input type="file" id="imgIn" hidden accept="image/*" onchange="addImg(this)">
+        <button class="btn" onclick="exec('formatBlock', 'h2')">見出し</button>
+        <button class="btn" onclick="save()" style="background:var(--accent); border:none;">ZIP保存</button>
     </div>
 
     <css-doodle click-to-update class="background">
@@ -74,59 +63,47 @@
           @grid: 1 / 100vw 100vh / #0a0c27;
           background-size: 200px 200px;
           background-image: @doodle(
-          @grid: 6 / 100%;
-          @size: 4px;
-          font-size: 4px;
-          color: hsl(@r240, 30%, 50%);
-          box-shadow: @m3x5(
-          calc(4em - @nx * 1em) calc(@ny * 1em)
+            @grid: 6 / 100%;
+            @size: 4px;
+            font-size: 4px;
+            color: hsl(@r240, 30%, 50%);
+            box-shadow: @m3x5(
+              calc(4em - @nx * 1em) calc(@ny * 1em)
               @p(@m3(currentColor), @m2(transparent)),
-          calc(2em + @nx * 1em) calc(@ny * 1em)
+              calc(2em + @nx * 1em) calc(@ny * 1em)
               @lp
+            );
           );
-        );
-      </style>
+        </style>
     </css-doodle>
 
     <div class="inseki-container"><div class="animated inseki"></div></div>
 
-    <div class="editor-container">
+    <div class="container">
         <article class="card">
-            <div id="post-title" class="post-title" contenteditable="true">タイトル</div>
-            <div id="post-date" class="post-date" contenteditable="true">2026.01.23</div>
-            <div id="editor" class="editable" contenteditable="true">
-                <p>ここにブログを書いてください。</p>
+            <div id="p-title" class="title" contenteditable="true">無題の記事</div>
+            <div id="p-date" class="date" contenteditable="true">2026.01.23</div>
+            <div id="p-editor" class="editor" contenteditable="true">
+                <p>ここにブログを執筆...</p>
             </div>
-            <center><a href="https://nattomaki10000.github.io/" class="btn-home">HOME</a></center>
+            <center><a href="https://nattomaki10000.github.io/" class="home-btn">HOME</a></center>
         </article>
     </div>
 
-    <script id="editor-script">
-        function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
-        function toggleBlock(tag) {
-            const selection = window.getSelection();
-            if (!selection.rangeCount) return;
-            let node = selection.anchorNode;
-            if (node.nodeType === 3) node = node.parentNode;
-            let isInside = false;
-            let curr = node;
-            while (curr && curr.id !== 'editor') {
-                if (curr.tagName === tag.toUpperCase()) { isInside = true; break; }
-                curr = curr.parentNode;
-            }
-            exec('formatBlock', isInside ? 'p' : tag);
-        }
-        function insertImage(input) {
-            const file = input.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => exec('insertImage', e.target.result);
-                reader.readAsDataURL(file);
+    <script id="main-js">
+        function exec(c, v = null) { document.execCommand(c, false, v); }
+        function addImg(i) {
+            const f = i.files[0];
+            if (f) {
+                const r = new FileReader();
+                r.onload = (e) => exec('insertImage', e.target.result);
+                r.readAsDataURL(f);
             }
         }
-        document.getElementById('editor').addEventListener('click', (e) => {
+        // 画像リサイズ機能
+        document.getElementById('p-editor').addEventListener('click', (e) => {
             if (e.target.tagName === 'IMG') {
-                const w = prompt("幅(%)を指定:", e.target.style.width.replace('%','') || '100');
+                const w = prompt("幅(%)を入力:", e.target.style.width.replace('%','') || '100');
                 if (w) { e.target.style.width = w + '%'; e.target.style.height = 'auto'; }
             }
         });
@@ -135,16 +112,15 @@
             const zip = new JSZip();
             let clone = document.documentElement.cloneNode(true);
             
-            // 不要なものを削除
-            const toolbar = clone.querySelector('#editor-toolbar');
-            const script = clone.querySelector('#editor-script'); // このスクリプト自身を削除
-            const jszipScript = Array.from(clone.querySelectorAll('script')).find(s => s.src.includes('jszip'));
+            // エディター専用の要素とスクリプトを削除
+            const tb = clone.querySelector('#toolbar');
+            const js = clone.querySelector('#main-js');
+            const jsz = Array.from(clone.querySelectorAll('script')).find(s => s.src.includes('jszip'));
+            if(tb) tb.remove();
+            if(js) js.remove();
+            if(jsz) jsz.remove();
             
-            if(toolbar) toolbar.remove();
-            if(script) script.remove();
-            if(jszipScript) jszipScript.remove();
-            
-            // 編集不可にする
+            // 編集状態を解除
             clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
 
             const html = "<!DOCTYPE html>\n" + clone.outerHTML;
