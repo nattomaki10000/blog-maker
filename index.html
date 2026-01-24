@@ -13,10 +13,10 @@
         :root { --accent: #ff4a4a; --bg: #0a0c27; }
         body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
 
-        /* --- サイトと全く同じ背景 (css-doodle) --- */
+        /* --- 背景 (css-doodle) --- */
         .background { position: fixed; inset: 0; z-index: -2; overflow: hidden; }
 
-        /* --- サイトと全く同じ隕石 (inseki) --- */
+        /* --- 隕石 (inseki) --- */
         .inseki-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
         .inseki::before {
             content: ""; position: absolute; top: -4px; left: -4px; width: 4px; height: 4px; background: transparent;
@@ -40,12 +40,13 @@
         }
         .tool-btn, .tool-select { background: #222; border: 1px solid #444; color: #fff; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: 0.2s; outline: none; }
         .tool-btn:hover, .tool-select:hover { border-color: var(--accent); background: #333; }
+        .tool-btn.active { background: var(--accent); border-color: #fff; box-shadow: 0 0 10px var(--accent); }
 
-        /* --- エディターエリア (カードの質感を同期) --- */
+        /* --- エディターエリア --- */
         .editor-container { width: 95%; max-width: 900px; margin: 40px 20px; z-index: 1; }
         .card { 
-            background: rgba(255, 74, 74, 0.1); /* サイトと同じ色 */
-            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); /* サイトと同じぼかし */
+            background: rgba(255, 74, 74, 0.1); 
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); 
             border-radius: 20px; padding: 50px; border: 1px solid rgba(255, 0, 0, 0.25); 
             min-height: 80vh; box-shadow: 0 10px 50px rgba(0,0,0,0.5); display: flex; flex-direction: column;
         }
@@ -67,13 +68,13 @@
 <body>
 
     <div id="editor-toolbar">
-        <button class="tool-btn" onclick="exec('bold')"><i class="fas fa-bold"></i></button>
-        <button class="tool-btn" onclick="exec('italic')"><i class="fas fa-italic"></i></button>
+        <button id="btn-bold" class="tool-btn" onclick="exec('bold')"><i class="fas fa-bold"></i></button>
+        <button id="btn-italic" class="tool-btn" onclick="exec('italic')"><i class="fas fa-italic"></i></button>
         <button class="tool-btn" onclick="addLink()"><i class="fas fa-link"></i></button>
         <button class="tool-btn" onclick="document.getElementById('imgInput').click()"><i class="fas fa-image"></i></button>
         <input type="file" id="imgInput" hidden accept="image/*" onchange="insertImage(this)">
         
-        <select class="tool-select" onchange="exec('fontSize', this.value)">
+        <select class="tool-select" id="fontSizeSelect" onchange="exec('fontSize', this.value)">
             <option value="3">サイズ: 中</option>
             <option value="1">極小</option>
             <option value="2">小</option>
@@ -82,9 +83,10 @@
             <option value="6">最大</option>
         </select>
 
-        <input type="color" class="tool-btn" onchange="exec('foreColor', this.value)">
-        <button class="tool-btn" onclick="toggleBlock('H2')">見出し</button>
-        <button class="tool-btn" onclick="toggleBlock('blockquote')">引用</button>
+        <input type="color" id="foreColorPicker" class="tool-btn" title="文字色" onchange="exec('foreColor', this.value)">
+        
+        <button id="btn-h2" class="tool-btn" onclick="toggleBlock('H2')">見出し</button>
+        <button id="btn-quote" class="tool-btn" onclick="toggleBlock('blockquote')">引用</button>
         <button class="tool-btn" onclick="downloadAsZip()" style="background:#ff0000; border:none; font-weight:bold;"><i class="fas fa-file-archive"></i> ZIP保存</button>
     </div>
 
@@ -130,7 +132,10 @@
     </div>
 
     <script>
-        function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
+        function exec(cmd, val = null) { 
+            document.execCommand(cmd, false, val);
+            syncToolbar(); 
+        }
 
         function toggleBlock(tag) {
             const selection = window.getSelection();
@@ -172,7 +177,59 @@
             }
         });
 
-        // 保存時にスタイルを完全に維持
+        // --- 同期ロジック ---
+        function rgbToHex(rgb) {
+            // 背景透過や無効な色の場合はデフォルト（薄いグレー）を返す
+            if (!rgb || rgb === 'rgba(0, 0, 0, 0)' || rgb === 'transparent') return '#eeeeee';
+            const match = rgb.match(/\d+/g);
+            if (!match) return '#eeeeee';
+            const hex = match.slice(0, 3).map(x => {
+                const h = parseInt(x).toString(16);
+                return h.length === 1 ? '0' + h : h;
+            }).join('');
+            return '#' + hex;
+        }
+
+        function syncToolbar() {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+
+            // キャレットの直前の要素（または親要素）を取得
+            let node = selection.anchorNode;
+            if (node.nodeType === 3) node = node.parentNode;
+
+            // 1. 文字色の同期（Computed Styleを使用して確実に取得）
+            const color = window.getComputedStyle(node).color;
+            document.getElementById('foreColorPicker').value = rgbToHex(color);
+
+            // 2. 太字・斜体状態
+            document.getElementById('btn-bold').classList.toggle('active', document.queryCommandState('bold'));
+            document.getElementById('btn-italic').classList.toggle('active', document.queryCommandState('italic'));
+
+            // 3. フォントサイズ
+            const fontSize = document.queryCommandValue('fontSize');
+            if (fontSize) document.getElementById('fontSizeSelect').value = fontSize;
+
+            // 4. 見出し・引用の同期（タグを遡って判定）
+            let isH2 = false;
+            let isQuote = false;
+            let curr = node;
+            while (curr && curr.id !== 'editor') {
+                if (curr.tagName === 'H2') isH2 = true;
+                if (curr.tagName === 'BLOCKQUOTE') isQuote = true;
+                curr = curr.parentNode;
+            }
+            document.getElementById('btn-h2').classList.toggle('active', isH2);
+            document.getElementById('btn-quote').classList.toggle('active', isQuote);
+        }
+
+        // エディタ内のイベントを監視
+        const editor = document.getElementById('editor');
+        ['keyup', 'mouseup', 'click'].forEach(evt => {
+            editor.addEventListener(evt, syncToolbar);
+        });
+
+        // 保存機能
         async function downloadAsZip() {
             const zip = new JSZip();
             let docClone = document.documentElement.cloneNode(true);
