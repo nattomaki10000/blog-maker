@@ -130,7 +130,7 @@
             </header>
 
             <div id="editor" class="editable" contenteditable="true">
-                <p>ここに本文を入力してください。画像をクリックするとサイズ変更ができます。</p>
+                <p>ここに本文を入力してください。</p>
             </div>
 
             <footer class="blog-footer">
@@ -142,7 +142,16 @@
     </div>
 
     <script>
-        // --- 基本編集機能 ---
+        const editor = document.getElementById('editor');
+        const title = document.getElementById('post-title');
+        const date = document.getElementById('post-date');
+
+        // --- 便利機能 ---
+        function getTodayDateString() {
+            const now = new Date();
+            return `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+        }
+
         function exec(cmd, val = null) { 
             document.execCommand(cmd, false, val);
             syncToolbar(); 
@@ -177,14 +186,11 @@
             }
         }
 
-        // --- 同期・保存機能 ---
-
         function rgbToHex(rgb) {
             if (!rgb || rgb.indexOf('rgb') === -1) return '#ffffff';
             const match = rgb.match(/\d+/g);
             if (!match) return '#ffffff';
-            const hex = match.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
-            return '#' + hex;
+            return '#' + match.slice(0, 3).map(x => parseInt(x).toString(16).padStart(2, '0')).join('');
         }
 
         function syncToolbar() {
@@ -212,12 +218,12 @@
             document.getElementById('btn-quote').classList.toggle('active', isQuote);
         }
 
-        // --- 自動保存 (localStorage) ---
+        // --- 自動保存 & ロード ---
         function autoSave() {
             const data = {
-                title: document.getElementById('post-title').innerText,
-                date: document.getElementById('post-date').innerText,
-                content: document.getElementById('editor').innerHTML
+                title: title.innerText,
+                date: date.innerText,
+                content: editor.innerHTML
             };
             localStorage.setItem('nattomaki_blog_draft', JSON.stringify(data));
         }
@@ -226,24 +232,24 @@
             const saved = localStorage.getItem('nattomaki_blog_draft');
             if (saved) {
                 const data = JSON.parse(saved);
-                document.getElementById('post-title').innerText = data.title;
-                document.getElementById('post-date').innerText = data.date;
-                document.getElementById('editor').innerHTML = data.content;
+                title.innerText = data.title;
+                date.innerText = data.date;
+                editor.innerHTML = data.content;
+            } else {
+                // 保存データがない（新規またはリセット後）場合、今日の日付をセット
+                date.innerText = getTodayDateString();
+                autoSave();
             }
         }
 
         function resetEditor() {
-            if (confirm("全ての入力内容を削除してリセットしますか？（保存データも消去されます）")) {
+            if (confirm("全ての入力内容を削除してリセットしますか？\n（日付は今日の日付に更新されます）")) {
                 localStorage.removeItem('nattomaki_blog_draft');
-                location.reload();
+                location.reload(); // リロードすると loadSavedData が走り、今日の日付がセットされる
             }
         }
 
         // --- イベント設定 ---
-        const editor = document.getElementById('editor');
-        const title = document.getElementById('post-title');
-        const date = document.getElementById('post-date');
-
         [editor, title, date].forEach(el => {
             el.addEventListener('input', () => {
                 autoSave();
@@ -283,7 +289,6 @@
             a.click();
         }
 
-        // 初期ロード時にデータを復元
         window.addEventListener('DOMContentLoaded', loadSavedData);
     </script>
 </body>
