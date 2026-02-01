@@ -306,42 +306,55 @@
         async function downloadAsZip() {
             const zip = new JSZip();
             const imgFolder = zip.folder("img");
+            
+            // 1. ドキュメントのクローンを作成
             let docClone = document.documentElement.cloneNode(true);
             
-            // UI要素の削除
+            // 2. 不要なUI要素とスクリプトの削除（エディタ機能を書き出さない）
             const toolbar = docClone.querySelector('#editor-toolbar');
             if(toolbar) toolbar.remove();
             
-            // 編集可能状態の解除
-            docClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            const scripts = docClone.querySelectorAll('script');
+            scripts.forEach(s => s.remove()); // エディタ用のJSを削除して軽量化
 
-            // 画像の抽出と保存
+            // 3. 編集可能状態の解除
+            docClone.querySelectorAll('[contenteditable]').forEach(el => {
+                el.removeAttribute('contenteditable');
+            });
+
+            // 4. 画像の抽出と保存 (Base64をファイル化)
             const images = docClone.querySelectorAll('#editor img');
             for (let i = 0; i < images.length; i++) {
                 const img = images[i];
                 const src = img.getAttribute('src');
-
-                // Base64形式の画像のみ処理
                 if (src && src.startsWith('data:image/')) {
-                    const fileName = `${i + 1}.png`;
+                    const extension = src.split(';')[0].split('/')[1] || 'png';
+                    const fileName = `${i + 1}.${extension}`;
                     const base64Data = src.split(',')[1];
-                    
-                    // imgフォルダ内に連番で保存
                     imgFolder.file(fileName, base64Data, {base64: true});
-                    
-                    // HTML内のパスを相対パス(img/n.png)に書き換え
                     img.setAttribute('src', `img/${fileName}`);
                 }
             }
 
-            const htmlContent = "<!DOCTYPE html>\n" + docClone.outerHTML;
+            // --- 文字化け対策 ---
+            // 5. UTF-8のBOM (\ufeff) を先頭に付与して、Windows等での文字化けを防止
+            const htmlContent = "\ufeff<!DOCTYPE html>\n" + docClone.outerHTML;
             zip.file("index.html", htmlContent);
             
-            const content = await zip.generateAsync({type:"blob"});
+            // 6. ファイル名から保存できない記号を削除
+            let safeTitle = title.innerText.trim().replace(/[\\/:*?"<>|]/g, "") || 'blog-post';
+            
+            const content = await zip.generateAsync({
+                type: "blob",
+                compression: "DEFLATE",
+                compressionOptions: { level: 9 }
+            });
+
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${title.innerText.trim() || 'blog-post'}.zip`;
+            a.download = `${safeTitle}.zip`;
             a.click();
+            URL.revokeObjectURL(a.href);
         }
 
         window.addEventListener('DOMContentLoaded', loadSavedData);
